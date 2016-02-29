@@ -1,4 +1,7 @@
 # ACME Java Client
+
+[![Circle CI](https://circleci.com/gh/jimmidyson/acme-client.svg?style=svg)](https://circleci.com/gh/jimmidyson/acme-client) [![codecov.io](https://codecov.io/github/jimmidyson/acme-client/coverage.svg?branch=master)](https://codecov.io/github/jimmidyson/acme-client?branch=master)
+
 This client provides a fluent DSL to interact with [ACME-compliant](https://ietf-wg-acme.github.io/acme/) certificate authorities
 to automate the management of certificates.
 
