@@ -20,10 +20,8 @@ dependencies:
     - sudo update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac
     - echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> ~/.circlerc
 
-  override:
-    - mvn install -DskipTests -U
 test:
   post:
    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
    - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-   - pip install codecov && codecov
+   - bash <(curl -s https://codecov.io/bash)
