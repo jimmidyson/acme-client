@@ -56,7 +56,7 @@ public class Nonce {
       }
       return replayNonce;
     }
-    return null;
+    return nonce;
   }
 
   public void extractNonce(Response response) {

@@ -20,8 +20,10 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.ACMEClientException;
 import io.fabric8.acme.client.model.Directory;
+import io.fabric8.acme.client.model.Registration;
 import io.fabric8.acme.client.model.Resource;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.ParseException;
@@ -47,15 +49,22 @@ public abstract class BaseOperations<T> {
 
   private Signer signer;
 
-  public BaseOperations(Directory directory, OkHttpClient okHttpClient, Nonce nonce, JWSAlgorithm jwsAlgorithm, Signer signer) {
+  private JWK jwk;
+
+  public BaseOperations(Directory directory, OkHttpClient okHttpClient, Nonce nonce, JWSAlgorithm jwsAlgorithm, Signer signer, JWK jwk) {
     this.directory = directory;
     this.okHttpClient = okHttpClient;
     this.nonce = nonce;
     this.jwsAlgorithm = jwsAlgorithm;
     this.signer = signer;
+    this.jwk = jwk;
   }
 
-  protected T sendRequest(Resource.ResourceType resourceType, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler) {
+  protected T sendRequest(Resource.ResourceType resourceType, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int expectedCode) {
+    return sendRequest(directory.get(resourceType), item, jwsHeader, responseHandler, expectedCode);
+  }
+
+  protected T sendRequest(String url, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int expectedCode) {
     // Construct the JWS to send on.
     JWSObject jwsObject = new JWSObject(jwsHeader, new Payload(item.toJSONObject()));
 
@@ -65,14 +74,14 @@ public abstract class BaseOperations<T> {
     RequestBody body = RequestBody.create(REQUEST_MEDIA_TYPE, compact);
 
     Request request = new Request.Builder()
-      .url(directory.get(resourceType))
+      .url(url)
       .post(body)
       .build();
 
     try {
       Response response = okHttpClient.newCall(request).execute();
       try {
-        assertSuccessfulResponse(response);
+        assertSuccessfulResponse(response, expectedCode);
         nonce.extractNonce(response);
         return responseHandler.handle(response);
       } finally {
@@ -83,22 +92,25 @@ public abstract class BaseOperations<T> {
     }
   }
 
-  protected JWSHeader.Builder noncedJwsHeader() {
+  protected JWSHeader.Builder jwsHeader() {
     return new JWSHeader.Builder(jwsAlgorithm)
-      .customParam("nonce", nonce.get());
+      .customParam("nonce", nonce.get())
+      .jwk(jwk);
   }
 
-  private void assertSuccessfulResponse(Response response) {
-    if (response.isSuccessful()) {
+  private void assertSuccessfulResponse(Response response, int expectedStatusCode) {
+    if (response.code() == expectedStatusCode) {
       return;
     }
     String detail = response.message();
     try {
       detail = response.body().string();
-      JSONObject parsedResponse = (JSONObject) JSONParserUtils.parse(detail);
+      JSONObject parsedResponse = JSONParserUtils.parse(detail);
       throw new ACMEClientException(response.code(), response.message(), parsedResponse);
     } catch (ParseException | IOException e) {
       throw new ACMEClientException(response.code(), response.message(), detail);
     }
   }
+
+  public abstract Registration update(Registration item);
 }

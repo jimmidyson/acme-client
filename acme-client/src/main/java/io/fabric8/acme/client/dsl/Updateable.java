@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.acme.client;
+package io.fabric8.acme.client.dsl;
 
-import org.junit.Test;
+public interface Updateable<T> {
 
-public class ConfigTest extends BaseTest {
-
-  @Test(expected = ACMEClientException.class)
-  public void testEmptyConfig() {
-    new Config(null, null, null, null);
-  }
+  T update(T item);
 
 }

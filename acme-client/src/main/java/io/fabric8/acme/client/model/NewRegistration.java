@@ -15,7 +15,6 @@
  */
 package io.fabric8.acme.client.model;
 
-import io.fabric8.acme.client.BaseResource;
 import io.sundr.builder.annotations.Buildable;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -31,13 +30,20 @@ public class NewRegistration extends BaseResource {
 
   private Map<String, String> contact;
 
-  public NewRegistration(Map<String, String> contact) {
+  private boolean agreeToTerms;
+
+  public NewRegistration(Map<String, String> contact, boolean agreeToTerms) {
     super(Resource.ResourceType.NEW_REGISTRATION);
     this.contact = contact;
+    this.agreeToTerms = agreeToTerms;
   }
 
   public Map<String, String> getContact() {
     return contact;
+  }
+
+  public boolean isAgreeToTerms() {
+    return agreeToTerms;
   }
 
   @Override

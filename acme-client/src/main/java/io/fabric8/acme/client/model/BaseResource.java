@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.acme.client;
-
-import io.fabric8.acme.client.model.Resource;
+package io.fabric8.acme.client.model;
 
 public abstract class BaseResource implements Resource {
 
