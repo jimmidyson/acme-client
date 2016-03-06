@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ "$CI_PULL_REQUEST" -eq "" ]]; then
+  echo "Not a PR... nothing to merge"
+  exit 0
+fi
+
 echo "Auto-merging pull request ${CI_PULL_REQUEST}"
 MERGE_URL=${CI_PULL_REQUEST/\/pull\//\/pulls\/}/merge
 MERGE_URL=${MERGE_URL/github.com\//api.github.com\/repos\/}
