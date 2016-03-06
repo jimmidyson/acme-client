@@ -28,3 +28,10 @@ test:
    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
    - find . -type f -regex ".*/target/.*-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
    - bash <(curl -s https://codecov.io/bash)
+
+deployment:
+  pr:
+    owner: jimmidyson
+    branch: /.+/
+    commands:
+      - "curl -XPUT -H \"Authorization: token ${GITHUB_ACCESS_TOKEN}\" -d\"{\\\"sha\\\":\\\"${CIRCLE_SHA1}\\\"}\" ${CI_PULL_REQUEST}"
