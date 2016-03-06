@@ -34,4 +34,4 @@ deployment:
     owner: jimmidyson
     branch: /.+/
     commands:
-      - "curl -XPUT -H \"Authorization: token ${GITHUB_ACCESS_TOKEN}\" -d\"{\\\"sha\\\":\\\"${CIRCLE_SHA1}\\\"}\" ${CI_PULL_REQUEST}"
+      - ./automerge.sh
