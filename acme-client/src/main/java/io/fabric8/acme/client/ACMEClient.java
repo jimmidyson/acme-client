@@ -15,7 +15,7 @@
  */
 package io.fabric8.acme.client;
 
-import io.fabric8.acme.client.dsl.Creatable;
+import io.fabric8.acme.client.dsl.GetCreateUpdatable;
 import io.fabric8.acme.client.model.Directory;
 import io.fabric8.acme.client.model.InlineNewRegistration;
 import io.fabric8.acme.client.model.NewRegistration;
@@ -25,6 +25,6 @@ public interface ACMEClient {
 
   Directory directory();
 
-  Creatable<Registration, NewRegistration, InlineNewRegistration> registration();
+  GetCreateUpdatable<Registration, NewRegistration, InlineNewRegistration> registration();
 
 }

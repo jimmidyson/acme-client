@@ -17,7 +17,6 @@ package io.fabric8.acme.client.model;
 
 import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.ACMEClientException;
-import io.fabric8.acme.client.BaseResource;
 import io.fabric8.acme.client.dsl.Sendable;
 import io.sundr.builder.annotations.Buildable;
 import io.sundr.builder.annotations.Inline;
@@ -50,9 +49,13 @@ public class Registration extends BaseResource {
 
   private String certificatesLocation;
 
+  private String recoverLocation;
+
   private Map<String, String> contact;
 
-  public Registration(JWK jwk, Map<String, String> contact, String location, String agreementLocation, String authorizationsLocation, String certificatesLocation) {
+  private boolean agreeToTerms;
+
+  public Registration(JWK jwk, Map<String, String> contact, String location, String agreementLocation, String authorizationsLocation, String certificatesLocation, String recoverLocation, boolean agreeToTerms) {
     super(ResourceType.REGISTRATION);
     this.jwk = jwk;
     this.location = location;
@@ -60,6 +63,8 @@ public class Registration extends BaseResource {
     this.authorizationsLocation = authorizationsLocation;
     this.certificatesLocation = certificatesLocation;
     this.contact = contact;
+    this.recoverLocation = recoverLocation;
+    this.agreeToTerms = agreeToTerms;
   }
 
   public JWK getJwk() {
@@ -86,6 +91,14 @@ public class Registration extends BaseResource {
     return certificatesLocation;
   }
 
+  public String getRecoverLocation() {
+    return recoverLocation;
+  }
+
+  public boolean isAgreeToTerms() {
+    return agreeToTerms;
+  }
+
   @Override
   public JSONObject toJSONObject() {
     JSONObject json = new JSONObject();
@@ -97,6 +110,17 @@ public class Registration extends BaseResource {
       }
       json.put("contact", contacts);
     }
+
+    if (agreementLocation != null && !agreementLocation.isEmpty()) {
+      json.put("agreement", agreementLocation);
+    }
+    if (authorizationsLocation != null && !authorizationsLocation.isEmpty()) {
+      json.put("authorizations", authorizationsLocation);
+    }
+    if (certificatesLocation != null && !certificatesLocation.isEmpty()) {
+      json.put("certificates", certificatesLocation);
+    }
+
     return json;
   }
 
