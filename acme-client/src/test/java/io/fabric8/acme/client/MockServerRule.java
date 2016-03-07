@@ -15,13 +15,13 @@
  */
 package io.fabric8.acme.client;
 
-import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.rules.ExternalResource;
 
 import java.io.IOException;
 
 import static io.fabric8.acme.client.Helpers.newDirectory;
+import static io.fabric8.acme.client.Helpers.noncedResponse;
 
 public class MockServerRule extends ExternalResource {
 
@@ -31,8 +31,7 @@ public class MockServerRule extends ExternalResource {
   protected void before() throws Throwable {
     server.start();
 
-    server.enqueue(new MockResponse().setBody(newDirectory(server))
-      .addHeader("Replay-Nonce", "aaa"));
+    server.enqueue(noncedResponse(newDirectory(server)));
 
   }
 

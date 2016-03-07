@@ -24,13 +24,14 @@ import org.junit.Test;
 import java.net.HttpURLConnection;
 import java.security.KeyPairGenerator;
 
+import static io.fabric8.acme.client.Helpers.noncedResponse;
 import static org.junit.Assert.assertEquals;
 
 public class RegistrationTest extends BaseTest {
 
   @Test
   public void testNewRegistrationWithLinkRelations() throws Exception {
-    server.enqueue(new MockResponse().setBody("{\n" +
+    server.enqueue(noncedResponse("{\n" +
       "  \"id\": 1,\n" +
       "  \"key\": {\n" +
       "    \"kty\": \"RSA\",\n" +
@@ -47,7 +48,6 @@ public class RegistrationTest extends BaseTest {
       .addHeader("Link", "<https://acme-staging.api.letsencrypt.org/acme/new-authz>;rel=\"next\"")
       .addHeader("Link", "<https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf>;rel=\"terms-of-service\"")
       .addHeader("Location", "https://acme-staging.api.letsencrypt.org/acme/reg/1")
-      .addHeader("Replay-Nonce", "bbb")
       .setResponseCode(HttpURLConnection.HTTP_CREATED)
     );
 
@@ -69,7 +69,7 @@ public class RegistrationTest extends BaseTest {
 
   @Test
   public void testNewRegistrationBuilderWithBodyRelations() throws Exception {
-    server.enqueue(new MockResponse().setBody("{\n" +
+    server.enqueue(noncedResponse("{\n" +
       "  \"id\": 1,\n" +
       "  \"key\": {\n" +
       "    \"kty\": \"RSA\",\n" +
@@ -89,7 +89,6 @@ public class RegistrationTest extends BaseTest {
       .addHeader("Link", "<https://acme-staging.api.letsencrypt.org/acme/new-authz>;rel=\"next\"")
       .addHeader("Link", "<https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf>;rel=\"terms-of-service\"")
       .addHeader("Location", "https://acme-staging.api.letsencrypt.org/acme/reg/1")
-      .addHeader("Replay-Nonce", "bbb")
       .setResponseCode(HttpURLConnection.HTTP_CREATED)
     );
 
@@ -112,7 +111,7 @@ public class RegistrationTest extends BaseTest {
 
   @Test
   public void testNewRegistrationBuilderAgreeToTerms() throws Exception {
-    server.enqueue(new MockResponse().setBody("{\n" +
+    server.enqueue(noncedResponse("{\n" +
       "  \"id\": 1,\n" +
       "  \"key\": {\n" +
       "    \"kty\": \"RSA\",\n" +
@@ -131,11 +130,10 @@ public class RegistrationTest extends BaseTest {
       .addHeader("Link", "<https://acme-staging.api.letsencrypt.org/acme/new-authz>;rel=\"next\"")
       .addHeader("Link", "<https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf>;rel=\"terms-of-service\"")
       .addHeader("Location", server.url("/acme/reg/1"))
-      .addHeader("Replay-Nonce", "bbb")
       .setResponseCode(HttpURLConnection.HTTP_CREATED)
     );
 
-    server.enqueue(new MockResponse().setBody("{\n" +
+    server.enqueue(noncedResponse("{\n" +
       "  \"id\": 1,\n" +
       "  \"key\": {\n" +
       "    \"kty\": \"RSA\",\n" +
@@ -152,7 +150,6 @@ public class RegistrationTest extends BaseTest {
       "}")
       .addHeader("Link", "<https://acme-staging.api.letsencrypt.org/acme/new-authz>;rel=\"next\"")
       .addHeader("Link", "<https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf>;rel=\"terms-of-service\"")
-      .addHeader("Replay-Nonce", "ccc")
       .setResponseCode(HttpURLConnection.HTTP_ACCEPTED)
     );
 

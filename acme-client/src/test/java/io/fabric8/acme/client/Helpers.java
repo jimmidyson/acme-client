@@ -15,7 +15,10 @@
  */
 package io.fabric8.acme.client;
 
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+
+import java.util.UUID;
 
 public class Helpers {
 
@@ -30,5 +33,9 @@ public class Helpers {
       "\"new-cert\": \"" + server.url("/acme/new-cert") + "\"," +
       "\"revoke-cert\": \"" + server.url("/acme/revoke-cert") + "\"" +
       "}";
+  }
+
+  public static MockResponse noncedResponse(String body) {
+    return new MockResponse().setBody(body).addHeader("Replay-Nonce", UUID.randomUUID().toString());
   }
 }
