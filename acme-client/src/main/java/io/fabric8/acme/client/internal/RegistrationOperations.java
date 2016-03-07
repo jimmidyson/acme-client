@@ -19,9 +19,10 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.ACMEClientException;
-import io.fabric8.acme.client.dsl.GetCreateUpdatable;
+import io.fabric8.acme.client.dsl.GetCreateUpdateEditable;
 import io.fabric8.acme.client.model.Directory;
 import io.fabric8.acme.client.model.InlineNewRegistration;
+import io.fabric8.acme.client.model.InlineRegistration;
 import io.fabric8.acme.client.model.NewRegistration;
 import io.fabric8.acme.client.model.Registration;
 import io.fabric8.acme.client.model.RegistrationBuilder;
@@ -32,7 +33,7 @@ import okhttp3.Response;
 
 import java.net.HttpURLConnection;
 
-public class RegistrationOperations extends BaseOperations<Registration> implements GetCreateUpdatable<Registration, NewRegistration, InlineNewRegistration> {
+public class RegistrationOperations extends BaseOperations<Registration> implements GetCreateUpdateEditable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration> {
 
   public RegistrationOperations(Directory directory, OkHttpClient okHttpClient, Nonce nonce, JWSAlgorithm jwsAlgorithm, Signer signer, JWK jwk) {
     super(directory, okHttpClient, nonce, jwsAlgorithm, signer, jwk);
@@ -71,16 +72,16 @@ public class RegistrationOperations extends BaseOperations<Registration> impleme
 
   private Registration handleRegistrationResponse(Response response, boolean agreeToTerms, String certificatesLocation) {
     try {
+      String location = response.header("Location");
+      if (location == null || location.isEmpty()) {
+        location = response.request().url().toString();
+      }
+
       JSONObject jsonObject = JSONParserUtils.parse(response.body().byteStream());
       RegistrationBuilder builder = new RegistrationBuilder(Registration.fromJSONObject(jsonObject));
 
       if (builder.getCertificatesLocation() == null || builder.getCertificatesLocation().isEmpty()) {
         builder.withCertificatesLocation(certificatesLocation);
-      }
-
-      String location = response.header("Location");
-      if (location == null || location.isEmpty()) {
-        location = response.request().url().toString();
       }
       builder.withLocation(location);
 
@@ -112,8 +113,24 @@ public class RegistrationOperations extends BaseOperations<Registration> impleme
       Resource.ResourceType.NEW_REGISTRATION,
       new NewRegistration(null, false),
       jwsHeader,
-      ((response) -> handleRegistrationResponse(response, false, null)),
-      HttpURLConnection.HTTP_CONFLICT
+      ((response) -> handleGetRegistrationResponse(response)),
+      HttpURLConnection.HTTP_CONFLICT, HttpURLConnection.HTTP_CREATED
     );
+  }
+
+  private Registration handleGetRegistrationResponse(Response response) {
+    if (response.code() == HttpURLConnection.HTTP_CONFLICT) {
+      String location = response.header("Location");
+      if (location != null && !location.isEmpty()) {
+        Registration reg = new RegistrationBuilder().withLocation(location).build();
+        return update(reg);
+      }
+    }
+    return handleRegistrationResponse(response, false, null);
+  }
+
+  @Override
+  public InlineRegistration edit() {
+    return new InlineRegistration(this::update, new RegistrationBuilder(get()));
   }
 }

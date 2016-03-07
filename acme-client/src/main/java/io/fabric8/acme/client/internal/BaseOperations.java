@@ -60,11 +60,11 @@ public abstract class BaseOperations<T> {
     this.jwk = jwk;
   }
 
-  protected T sendRequest(Resource.ResourceType resourceType, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int expectedCode) {
-    return sendRequest(directory.get(resourceType), item, jwsHeader, responseHandler, expectedCode);
+  protected T sendRequest(Resource.ResourceType resourceType, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int... successCodes) {
+    return sendRequest(directory.get(resourceType), item, jwsHeader, responseHandler, successCodes);
   }
 
-  protected T sendRequest(String url, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int expectedCode) {
+  protected T sendRequest(String url, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int... successCodes) {
     // Construct the JWS to send on.
     JWSObject jwsObject = new JWSObject(jwsHeader, new Payload(item.toJSONObject()));
 
@@ -81,7 +81,7 @@ public abstract class BaseOperations<T> {
     try {
       Response response = okHttpClient.newCall(request).execute();
       try {
-        assertSuccessfulResponse(response, expectedCode);
+        assertSuccessfulResponse(response, successCodes);
         nonce.extractNonce(response);
         return responseHandler.handle(response);
       } finally {
@@ -98,9 +98,11 @@ public abstract class BaseOperations<T> {
       .jwk(jwk);
   }
 
-  private void assertSuccessfulResponse(Response response, int expectedStatusCode) {
-    if (response.code() == expectedStatusCode) {
-      return;
+  private void assertSuccessfulResponse(Response response, int... expectedStatusCode) {
+    for (int code : expectedStatusCode) {
+      if (response.code() == code) {
+        return;
+      }
     }
     String detail = response.message();
     try {
