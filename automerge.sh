@@ -15,8 +15,9 @@
 # limitations under the License.
 #
 
+set -eo pipefail
 
-if [[ "$CI_PULL_REQUEST" -eq "" ]]; then
+if [[ "${CI_PULL_REQUEST}" -eq "" ]]; then
   echo "Not a PR... nothing to merge"
   exit 0
 fi
