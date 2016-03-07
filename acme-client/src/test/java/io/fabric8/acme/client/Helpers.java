@@ -36,6 +36,11 @@ public class Helpers {
   }
 
   public static MockResponse noncedResponse(String body) {
-    return new MockResponse().setBody(body).addHeader("Replay-Nonce", UUID.randomUUID().toString());
+    MockResponse resp = new MockResponse();
+    if (body != null) {
+      resp.setBody(body);
+    }
+    resp.addHeader("Replay-Nonce", UUID.randomUUID().toString());
+    return resp;
   }
 }

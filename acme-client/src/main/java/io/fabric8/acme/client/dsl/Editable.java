@@ -15,7 +15,8 @@
  */
 package io.fabric8.acme.client.dsl;
 
-public interface Updateable<T> {
+public interface Editable<U> {
 
-  T update(T item);
+  U edit();
+
 }

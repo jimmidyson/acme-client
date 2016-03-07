@@ -13,9 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.acme.client.dsl;
+package io.fabric8.acme.client.model;
 
-public interface Updateable<T> {
+import io.fabric8.acme.client.dsl.Sendable;
 
-  T update(T item);
+public class InlineRegistration extends RegistrationFluentImpl<InlineRegistration>
+  implements Sendable<Registration> {
+
+  private final RegistrationBuilder builder;
+
+  private final Callback<Registration, Registration> callback;
+
+  public InlineRegistration(Callback<Registration, Registration> callback, RegistrationBuilder builder) {
+    this.builder = builder;
+    this.callback = callback;
+  }
+
+  @Override
+  public Registration send() {
+    return callback.call(builder.build());
+  }
+
 }
