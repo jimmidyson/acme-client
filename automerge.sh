@@ -31,3 +31,11 @@ if [[ "$STATUS_CODE" -ne "200" ]]; then
   exit 1
 fi
 
+echo "Deleting PR branch ${CIRCLE_BRANCH}"
+DELETE_BRANCH_URL=https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/git/refs/heads/${CIRCLE_BRANCH}
+STATUS_CODE=$(curl -qSfsw '\n%{http_code}' -XDELETE -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -H 'Accept: application/vnd.github.v3+json' ${DELETE_BRANCH_URL})
+echo "Received ${STATUS_CODE}"
+if [[ "$STATUS_CODE" -ne "204" ]]; then
+  echo "Delete branch failed - you'll have to do this manually..."
+fi
+
