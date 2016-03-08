@@ -10,6 +10,11 @@ available ACME CA but will work with any ACME-compliant CA. If you're looking fo
 then you can install your own via the Let's Encrypt OSS project
 [Boulder](https://github.com/letsencrypt/boulder).
 
+## Table of Contents
+* [Usage](#usage)
+  * [Creating a client](#creating-a-client)
+  * [Using the DSL](#using-the-dsl)
+
 ## Usage
 
 ### Creating a client
