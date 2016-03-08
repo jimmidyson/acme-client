@@ -40,3 +40,11 @@ if [[ "$STATUS_CODE" -ne "204" ]]; then
   echo "Delete branch failed - you'll have to do this manually..."
 fi
 
+COMMENT_URL=${CI_PULL_REQUEST/\/pull\//\/issues\/}/comments
+COMMENT_URL=${MERGE_URL/github.com\//api.github.com\/repos\/}
+STATUS_CODE=$(curl -qSfsw '\n%{http_code}' -XPUT -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -d'{"body":"PR merged & branch deleted!"}' -H 'Accept: application/vnd.github.v3+json' ${COMMENT_URL})
+echo "Received ${STATUS_CODE}"
+if [[ "$STATUS_CODE" -ne "201" ]]; then
+  echo "Failed to comment - sorry, I did try though..."
+fi
+
