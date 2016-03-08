@@ -23,7 +23,6 @@ import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.ACMEClientException;
 import io.fabric8.acme.client.model.Directory;
-import io.fabric8.acme.client.model.Registration;
 import io.fabric8.acme.client.model.Resource;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.ParseException;
@@ -65,8 +64,12 @@ public abstract class BaseOperations<T> {
   }
 
   protected T sendRequest(String url, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int... successCodes) {
+    return sendRequest(url, item.toJSONObject(), jwsHeader, responseHandler, successCodes);
+  }
+
+  protected T sendRequest(String url, JSONObject jsonObject, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int... successCodes) {
     // Construct the JWS to send on.
-    JWSObject jwsObject = new JWSObject(jwsHeader, new Payload(item.toJSONObject()));
+    JWSObject jwsObject = new JWSObject(jwsHeader, new Payload(jsonObject));
 
     signer.sign(jwsObject);
 
@@ -114,5 +117,11 @@ public abstract class BaseOperations<T> {
     }
   }
 
-  public abstract Registration update(Registration item);
+  protected JWK getJwk() {
+    return jwk;
+  }
+
+  protected JWSAlgorithm getJwsAlgorithm() {
+    return jwsAlgorithm;
+  }
 }

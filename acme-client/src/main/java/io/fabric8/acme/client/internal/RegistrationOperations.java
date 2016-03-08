@@ -15,11 +15,14 @@
  */
 package io.fabric8.acme.client.internal;
 
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.ACMEClientException;
-import io.fabric8.acme.client.dsl.GetCreateUpdateEditable;
+import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdatable;
 import io.fabric8.acme.client.model.Directory;
 import io.fabric8.acme.client.model.InlineNewRegistration;
 import io.fabric8.acme.client.model.InlineRegistration;
@@ -32,8 +35,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 import java.net.HttpURLConnection;
+import java.security.KeyPair;
 
-public class RegistrationOperations extends BaseOperations<Registration> implements GetCreateUpdateEditable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration> {
+public class RegistrationOperations extends BaseOperations<Registration> implements GetCreateUpdateEditKeyUpdatable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration> {
 
   public RegistrationOperations(Directory directory, OkHttpClient okHttpClient, Nonce nonce, JWSAlgorithm jwsAlgorithm, Signer signer, JWK jwk) {
     super(directory, okHttpClient, nonce, jwsAlgorithm, signer, jwk);
@@ -132,5 +136,30 @@ public class RegistrationOperations extends BaseOperations<Registration> impleme
   @Override
   public InlineRegistration edit() {
     return new InlineRegistration(this::update, new RegistrationBuilder(get()));
+  }
+
+  // See https://ietf-wg-acme.github.io/acme/#account-key-roll-over
+  @Override
+  public void updateKey(KeyPair newKeyPair) {
+    try {
+      JSONObject oldKey = new JSONObject();
+      oldKey.put("resource", "reg");
+      oldKey.put("oldKey", getJwk().computeThumbprint());
+
+      JWK newJWK = JWKUtils.jwkFromPublicKey(newKeyPair.getPublic());
+
+      JWSHeader oldKeyHeader = new JWSHeader.Builder(getJwsAlgorithm()).jwk(newJWK).build();
+      JWSObject oldJwsObject = new JWSObject(oldKeyHeader, new Payload(oldKey));
+
+      new Signer(newKeyPair.getPrivate()).sign(oldJwsObject);
+
+      JSONObject newKey = new JSONObject();
+      newKey.put("resource", "reg");
+      newKey.put("newKey", oldJwsObject.serialize());
+
+      sendRequest(get().getLocation(), newKey, jwsHeader().build(), (response) -> null, HttpURLConnection.HTTP_ACCEPTED);
+    } catch (JOSEException e) {
+      throw ACMEClientException.launderThrowable(e);
+    }
   }
 }

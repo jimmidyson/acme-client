@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.acme.client.internal;
+package io.fabric8.acme.client.dsl;
 
-public class JWSUtils {
-
-  private JWSUtils() {
-  }
-
-
+public interface GetCreateUpdateEditKeyUpdatable<T, U, V, W> extends Gettable<T>, Creatable<T, U, V>, Updatable<T>, Editable<W>, KeyUpdatable {
 }
