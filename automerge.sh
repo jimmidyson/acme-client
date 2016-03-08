@@ -25,7 +25,7 @@ fi
 echo "Auto-merging pull request ${CI_PULL_REQUEST}"
 MERGE_URL=${CI_PULL_REQUEST/\/pull\//\/pulls\/}/merge
 MERGE_URL=${MERGE_URL/github.com\//api.github.com\/repos\/}
-STATUS_CODE=$(curl -qSfsw '\n%{http_code}' -XPUT -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -d"{\"sha\":\"${CIRCLE_SHA1}\"}" -H 'Accept: application/vnd.github.v3+json' ${MERGE_URL})
+STATUS_CODE=$(curl -qSfsw '%{http_code}' -o /dev/null -XPUT -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -d"{\"sha\":\"${CIRCLE_SHA1}\"}" -H 'Accept: application/vnd.github.v3+json' ${MERGE_URL})
 echo "Received ${STATUS_CODE}"
 if [[ "$STATUS_CODE" != "200" ]]; then
   echo "Auto-merge failed..."
@@ -34,7 +34,7 @@ fi
 
 echo "Deleting PR branch ${CIRCLE_BRANCH}"
 DELETE_BRANCH_URL=https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/git/refs/heads/${CIRCLE_BRANCH}
-STATUS_CODE=$(curl -qSfsw '\n%{http_code}' -XDELETE -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -H 'Accept: application/vnd.github.v3+json' ${DELETE_BRANCH_URL})
+STATUS_CODE=$(curl -qSfsw '\n%{http_code}' -o /dev/null -XDELETE -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -H 'Accept: application/vnd.github.v3+json' ${DELETE_BRANCH_URL})
 echo "Received ${STATUS_CODE}"
 if [[ "$STATUS_CODE" != "204" ]]; then
   echo "Delete branch failed - you'll have to do this manually..."
@@ -42,7 +42,7 @@ fi
 
 COMMENT_URL=${CI_PULL_REQUEST/\/pull\//\/issues\/}/comments
 COMMENT_URL=${MERGE_URL/github.com\//api.github.com\/repos\/}
-STATUS_CODE=$(curl -qSfsw '\n%{http_code}' -XPUT -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -d'{"body":"PR merged & branch deleted!"}' -H 'Accept: application/vnd.github.v3+json' ${COMMENT_URL})
+STATUS_CODE=$(curl -qSfsw '\n%{http_code}' -o /dev/null -XPUT -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -d'{"body":"PR merged & branch deleted!"}' -H 'Accept: application/vnd.github.v3+json' ${COMMENT_URL})
 echo "Received ${STATUS_CODE}"
 if [[ "$STATUS_CODE" != "201" ]]; then
   echo "Failed to comment - sorry, I did try though..."
