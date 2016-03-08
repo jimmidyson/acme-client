@@ -17,7 +17,7 @@ package io.fabric8.acme.client;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
-import io.fabric8.acme.client.dsl.GetCreateUpdateEditable;
+import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdatable;
 import io.fabric8.acme.client.internal.HttpClientUtils;
 import io.fabric8.acme.client.internal.JWKUtils;
 import io.fabric8.acme.client.internal.Nonce;
@@ -107,7 +107,7 @@ public class DefaultACMEClient implements ACMEClient {
   }
 
   @Override
-  public GetCreateUpdateEditable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration> registration() {
+  public GetCreateUpdateEditKeyUpdatable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration> registration() {
     return new RegistrationOperations(directory, okHttpClient, nonce, config.getJwsAlgorithm(), signer, jwk);
   }
 

@@ -15,5 +15,10 @@
  */
 package io.fabric8.acme.client.dsl;
 
-public interface GetCreateUpdateEditable<T, U, V, W> extends Gettable<T>, Creatable<T, U, V>, Updateable<T>, Editable<W> {
+import java.security.KeyPair;
+
+public interface KeyUpdatable {
+
+  void updateKey(KeyPair newKeyPair);
+
 }
