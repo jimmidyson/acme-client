@@ -15,8 +15,6 @@
 # limitations under the License.
 #
 
-set -eo pipefail
-
 if [[ "${CI_PULL_REQUEST}" == "" ]]; then
   echo "Not a PR... nothing to merge"
   exit 0
@@ -41,7 +39,7 @@ if [[ "$STATUS_CODE" != "204" ]]; then
 fi
 
 COMMENT_URL=${CI_PULL_REQUEST/\/pull\//\/issues\/}/comments
-COMMENT_URL=${MERGE_URL/github.com\//api.github.com\/repos\/}
+COMMENT_URL=${COMMENT_URL/github.com\//api.github.com\/repos\/}
 STATUS_CODE=$(curl -qSfsw '%{http_code}' -o /dev/null -XPUT -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -d'{"body":"PR merged & branch deleted!"}' -H 'Accept: application/vnd.github.v3+json' ${COMMENT_URL})
 echo "Received ${STATUS_CODE}"
 if [[ "$STATUS_CODE" != "201" ]]; then
