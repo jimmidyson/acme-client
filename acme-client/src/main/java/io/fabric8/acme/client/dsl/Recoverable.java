@@ -15,5 +15,8 @@
  */
 package io.fabric8.acme.client.dsl;
 
-public interface GetCreateUpdateEditKeyUpdatable<T, U, V, W> extends Gettable<T>, Creatable<T, U, V>, Updatable<T>, Editable<W>, KeyUpdatable {
+public interface Recoverable<T>  {
+
+  T recovery();
+
 }

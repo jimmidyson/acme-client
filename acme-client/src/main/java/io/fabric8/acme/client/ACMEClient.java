@@ -15,9 +15,10 @@
  */
 package io.fabric8.acme.client;
 
-import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdatable;
+import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdateRecoverable;
 import io.fabric8.acme.client.model.Directory;
 import io.fabric8.acme.client.model.InlineNewRegistration;
+import io.fabric8.acme.client.model.InlineRecoveryRegistration;
 import io.fabric8.acme.client.model.InlineRegistration;
 import io.fabric8.acme.client.model.NewRegistration;
 import io.fabric8.acme.client.model.Registration;
@@ -26,6 +27,6 @@ public interface ACMEClient {
 
   Directory directory();
 
-  GetCreateUpdateEditKeyUpdatable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration> registration();
+  GetCreateUpdateEditKeyUpdateRecoverable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration, InlineRecoveryRegistration> registration();
 
 }
