@@ -32,6 +32,8 @@ import java.util.List;
 )
 public class Authorization extends BaseResource {
 
+  private String location;
+
   private Identifier identifier;
 
   private Status status = Status.PENDING;
@@ -42,12 +44,17 @@ public class Authorization extends BaseResource {
 
   private List<List<Challenge>> combinations;
 
-  public Authorization(Identifier identifier, TemporalAccessor expires, List<Challenge> challenges, List<List<Challenge>> combinations) {
+  public Authorization(String location, Identifier identifier, TemporalAccessor expires, List<Challenge> challenges, List<List<Challenge>> combinations) {
     super(ResourceType.AUTHORIZATION);
+    this.location = location;
     this.identifier = identifier;
     this.expires = expires;
     this.challenges = challenges;
     this.combinations = combinations;
+  }
+
+  public String getLocation() {
+    return location;
   }
 
   public Identifier getIdentifier() {
@@ -144,5 +151,4 @@ public class Authorization extends BaseResource {
 
     return builder.build();
   }
-
 }

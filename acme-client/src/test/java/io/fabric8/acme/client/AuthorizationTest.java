@@ -53,7 +53,8 @@ public class AuthorizationTest extends BaseTest {
 
     server.enqueue(
       noncedResponse("{\"identifier\":{\"type\":\"dns\",\"value\":\"fabric8.io\"},\"status\":\"pending\",\"expires\":\"2017-03-23T21:06:45.899078471Z\",\"challenges\":[{\"type\":\"dns-01\",\"status\":\"pending\",\"uri\":\"" + server.url("/acme/challenge/abcde/1234") + "\",\"token\":\"qwerty\"},{\"type\":\"tls-sni-01\",\"status\":\"pending\",\"uri\":\"" + server.url("/acme/challenge/zxcvb/98765") + "\",\"token\":\"asdfg\"},{\"type\":\"http-01\",\"status\":\"pending\",\"uri\":\"" + server.url("/acme/challenge/lkjhg/456321") + "\",\"token\":\"mnbvc\"}],\"combinations\":[[0],[1,2]]}")
-      .setResponseCode(201)
+        .addHeader("Location", server.url("/acme/authorization/111"))
+        .setResponseCode(201)
     );
 
     HttpUrl baseUrl = server.url("/directory");
@@ -71,6 +72,8 @@ public class AuthorizationTest extends BaseTest {
 
     Authorization authz = client.authorization().createNew().withNewIdentifier("dns", "fabric8.io").send();
     assertNotNull(authz);
+    assertEquals(server.url("/acme/authorization/111").toString(), authz.getLocation());
+
     assertEquals(3, authz.getChallenges().size());
     assertEquals("dns-01", authz.getChallenges().get(0).getType());
     assertEquals("tls-sni-01", authz.getChallenges().get(1).getType());

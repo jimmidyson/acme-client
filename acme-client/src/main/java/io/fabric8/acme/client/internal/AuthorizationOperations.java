@@ -21,6 +21,7 @@ import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.ACMEClientException;
 import io.fabric8.acme.client.dsl.Creatable;
 import io.fabric8.acme.client.model.Authorization;
+import io.fabric8.acme.client.model.AuthorizationBuilder;
 import io.fabric8.acme.client.model.Directory;
 import io.fabric8.acme.client.model.NewAuthorization;
 import io.fabric8.acme.client.model.Resource;
@@ -58,7 +59,9 @@ public class AuthorizationOperations extends BaseOperations<Authorization> imple
   private Authorization handleAuthorizationResponse(Response response) {
     try {
       JSONObject jsonObject = JSONParserUtils.parse(response.body().byteStream());
-      return Authorization.fromJSONObject(jsonObject);
+      AuthorizationBuilder builder = new AuthorizationBuilder(Authorization.fromJSONObject(jsonObject));
+      builder.withLocation(response.header("Location"));
+      return builder.build();
     } catch (Exception e) {
       throw ACMEClientException.launderThrowable(e);
     }
