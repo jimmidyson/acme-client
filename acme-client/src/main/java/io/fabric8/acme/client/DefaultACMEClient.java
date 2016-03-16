@@ -17,15 +17,19 @@ package io.fabric8.acme.client;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
+import io.fabric8.acme.client.dsl.Creatable;
 import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdateRecoverable;
 import io.fabric8.acme.client.internal.HttpClientUtils;
 import io.fabric8.acme.client.internal.JWKUtils;
 import io.fabric8.acme.client.internal.Nonce;
 import io.fabric8.acme.client.internal.RegistrationOperations;
 import io.fabric8.acme.client.internal.Signer;
+import io.fabric8.acme.client.model.Authorization;
 import io.fabric8.acme.client.model.Directory;
+import io.fabric8.acme.client.model.NewAuthorization;
 import io.fabric8.acme.client.model.NewRegistration;
 import io.fabric8.acme.client.model.Registration;
+import io.fabric8.acme.client.model.SendableNewAuthorization;
 import io.fabric8.acme.client.model.SendableNewRegistration;
 import io.fabric8.acme.client.model.SendableRecoveryRegistration;
 import io.fabric8.acme.client.model.SendableRegistration;
@@ -110,6 +114,11 @@ public class DefaultACMEClient implements ACMEClient {
   @Override
   public GetCreateUpdateEditKeyUpdateRecoverable<Registration, NewRegistration, SendableNewRegistration, SendableRegistration, SendableRecoveryRegistration> registration() {
     return new RegistrationOperations(directory, okHttpClient, nonce, config.getJwsAlgorithm(), signer, jwk);
+  }
+
+  @Override
+  public Creatable<Authorization, NewAuthorization, SendableNewAuthorization> authorization() {
+    return new AuthorizationOptions(directory, okHttpClient, nonce, config.getJwsAlgorithm(), signer, jwk);
   }
 
 }
