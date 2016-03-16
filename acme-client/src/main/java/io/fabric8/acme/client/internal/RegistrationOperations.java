@@ -24,14 +24,14 @@ import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.ACMEClientException;
 import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdateRecoverable;
 import io.fabric8.acme.client.model.Directory;
-import io.fabric8.acme.client.model.InlineNewRegistration;
-import io.fabric8.acme.client.model.InlineRecoveryRegistration;
-import io.fabric8.acme.client.model.InlineRegistration;
 import io.fabric8.acme.client.model.NewRegistration;
 import io.fabric8.acme.client.model.RecoveryRegistration;
 import io.fabric8.acme.client.model.Registration;
 import io.fabric8.acme.client.model.RegistrationBuilder;
 import io.fabric8.acme.client.model.Resource;
+import io.fabric8.acme.client.model.SendableNewRegistration;
+import io.fabric8.acme.client.model.SendableRecoveryRegistration;
+import io.fabric8.acme.client.model.SendableRegistration;
 import net.minidev.json.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -39,15 +39,15 @@ import okhttp3.Response;
 import java.net.HttpURLConnection;
 import java.security.KeyPair;
 
-public class RegistrationOperations extends BaseOperations<Registration> implements GetCreateUpdateEditKeyUpdateRecoverable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration, InlineRecoveryRegistration> {
+public class RegistrationOperations extends BaseOperations<Registration> implements GetCreateUpdateEditKeyUpdateRecoverable<Registration, NewRegistration, SendableNewRegistration, SendableRegistration, SendableRecoveryRegistration> {
 
   public RegistrationOperations(Directory directory, OkHttpClient okHttpClient, Nonce nonce, JWSAlgorithm jwsAlgorithm, Signer signer, JWK jwk) {
     super(directory, okHttpClient, nonce, jwsAlgorithm, signer, jwk);
   }
 
   @Override
-  public InlineNewRegistration createNew() {
-    return new InlineNewRegistration(this::create);
+  public SendableNewRegistration createNew() {
+    return new SendableNewRegistration(this::create);
   }
 
   @Override
@@ -136,8 +136,8 @@ public class RegistrationOperations extends BaseOperations<Registration> impleme
   }
 
   @Override
-  public InlineRegistration edit() {
-    return new InlineRegistration(this::update, new RegistrationBuilder(get()));
+  public SendableRegistration edit() {
+    return new SendableRegistration(get(), this::update);
   }
 
   // See https://ietf-wg-acme.github.io/acme/#account-key-roll-over
@@ -166,8 +166,8 @@ public class RegistrationOperations extends BaseOperations<Registration> impleme
   }
 
   @Override
-  public InlineRecoveryRegistration recovery() {
-    return new InlineRecoveryRegistration(this::recover);
+  public SendableRecoveryRegistration recovery() {
+    return new SendableRecoveryRegistration(this::recover);
   }
 
   private Registration recover(RecoveryRegistration recoveryRegistration) {

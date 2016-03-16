@@ -32,7 +32,8 @@ import java.util.Map;
   inline = @Inline(
     type = Sendable.class,
     prefix = "Sendable",
-    value = "send"
+    value = "send",
+    returnType = Registration.class
   )
 )
 public class RecoveryRegistration extends BaseResource {
