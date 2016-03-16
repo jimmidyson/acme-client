@@ -24,11 +24,11 @@ import io.fabric8.acme.client.internal.Nonce;
 import io.fabric8.acme.client.internal.RegistrationOperations;
 import io.fabric8.acme.client.internal.Signer;
 import io.fabric8.acme.client.model.Directory;
-import io.fabric8.acme.client.model.InlineNewRegistration;
-import io.fabric8.acme.client.model.InlineRecoveryRegistration;
-import io.fabric8.acme.client.model.InlineRegistration;
 import io.fabric8.acme.client.model.NewRegistration;
 import io.fabric8.acme.client.model.Registration;
+import io.fabric8.acme.client.model.SendableNewRegistration;
+import io.fabric8.acme.client.model.SendableRecoveryRegistration;
+import io.fabric8.acme.client.model.SendableRegistration;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import okhttp3.OkHttpClient;
@@ -108,7 +108,7 @@ public class DefaultACMEClient implements ACMEClient {
   }
 
   @Override
-  public GetCreateUpdateEditKeyUpdateRecoverable<Registration, NewRegistration, InlineNewRegistration, InlineRegistration, InlineRecoveryRegistration> registration() {
+  public GetCreateUpdateEditKeyUpdateRecoverable<Registration, NewRegistration, SendableNewRegistration, SendableRegistration, SendableRecoveryRegistration> registration() {
     return new RegistrationOperations(directory, okHttpClient, nonce, config.getJwsAlgorithm(), signer, jwk);
   }
 

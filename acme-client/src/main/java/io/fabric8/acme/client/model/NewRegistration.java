@@ -15,7 +15,9 @@
  */
 package io.fabric8.acme.client.model;
 
+import io.fabric8.acme.client.dsl.Sendable;
 import io.sundr.builder.annotations.Buildable;
+import io.sundr.builder.annotations.Inline;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -24,7 +26,8 @@ import java.util.Map;
 @Buildable(
   generateBuilderPackage = true,
   builderPackage = "io.fabric8.acme.client.builder",
-  editableEnabled = false
+  editableEnabled = false,
+  inline = @Inline(prefix = "Sendable", value = "send", type = Sendable.class, returnType = Registration.class)
 )
 public class NewRegistration extends BaseResource {
 
