@@ -15,8 +15,9 @@
  */
 package io.fabric8.acme.client;
 
-import io.fabric8.acme.client.dsl.Creatable;
+import io.fabric8.acme.client.dsl.CreateLocatable;
 import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdateRecoverable;
+import io.fabric8.acme.client.dsl.Gettable;
 import io.fabric8.acme.client.model.Authorization;
 import io.fabric8.acme.client.model.Directory;
 import io.fabric8.acme.client.model.NewAuthorization;
@@ -33,6 +34,6 @@ public interface ACMEClient {
 
   GetCreateUpdateEditKeyUpdateRecoverable<Registration, NewRegistration, SendableNewRegistration, SendableRegistration, SendableRecoveryRegistration> registration();
 
-  Creatable<Authorization, NewAuthorization, SendableNewAuthorization> authorization();
+  CreateLocatable<Authorization, NewAuthorization, SendableNewAuthorization, Gettable<Authorization>> authorization();
 
 }

@@ -17,8 +17,9 @@ package io.fabric8.acme.client;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
-import io.fabric8.acme.client.dsl.Creatable;
+import io.fabric8.acme.client.dsl.CreateLocatable;
 import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdateRecoverable;
+import io.fabric8.acme.client.dsl.Gettable;
 import io.fabric8.acme.client.internal.AuthorizationOperations;
 import io.fabric8.acme.client.internal.HttpClientUtils;
 import io.fabric8.acme.client.internal.JWKUtils;
@@ -118,7 +119,7 @@ public class DefaultACMEClient implements ACMEClient {
   }
 
   @Override
-  public Creatable<Authorization, NewAuthorization, SendableNewAuthorization> authorization() {
+  public CreateLocatable<Authorization, NewAuthorization, SendableNewAuthorization, Gettable<Authorization>> authorization() {
     return new AuthorizationOperations(directory, okHttpClient, nonce, config.getJwsAlgorithm(), signer, jwk);
   }
 

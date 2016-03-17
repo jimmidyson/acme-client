@@ -90,7 +90,18 @@ public abstract class BaseOperations<T> {
       .url(url)
       .post(body)
       .build();
+    return sendRequest(request, responseHandler, successCodes);
+  }
 
+  protected T sendRequest(String url, ResponseHandler<T> responseHandler, int... successCodes) {
+    Request request = new Request.Builder()
+      .url(url)
+      .get()
+      .build();
+    return sendRequest(request, responseHandler, successCodes);
+  }
+
+  protected T sendRequest(Request request, ResponseHandler<T> responseHandler, int... successCodes) {
     try {
       Response response = okHttpClient.newCall(request).execute();
       try {
