@@ -20,13 +20,17 @@ import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.dsl.CreateLocatable;
 import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdateRecoverable;
 import io.fabric8.acme.client.dsl.Gettable;
+import io.fabric8.acme.client.dsl.Readyable;
+import io.fabric8.acme.client.dsl.UseLocatable;
 import io.fabric8.acme.client.internal.AuthorizationOperations;
+import io.fabric8.acme.client.internal.ChallengeOperations;
 import io.fabric8.acme.client.internal.HttpClientUtils;
 import io.fabric8.acme.client.internal.JWKUtils;
 import io.fabric8.acme.client.internal.Nonce;
 import io.fabric8.acme.client.internal.RegistrationOperations;
 import io.fabric8.acme.client.internal.Signer;
 import io.fabric8.acme.client.model.Authorization;
+import io.fabric8.acme.client.model.Challenge;
 import io.fabric8.acme.client.model.Directory;
 import io.fabric8.acme.client.model.NewAuthorization;
 import io.fabric8.acme.client.model.NewRegistration;
@@ -121,6 +125,24 @@ public class DefaultACMEClient implements ACMEClient {
   @Override
   public CreateLocatable<Authorization, NewAuthorization, SendableNewAuthorization, Gettable<Authorization>> authorization() {
     return new AuthorizationOperations(directory, okHttpClient, nonce, config.getJwsAlgorithm(), signer, jwk);
+  }
+
+  @Override
+  public UseLocatable<Challenge, Readyable<Challenge>> challenges() {
+    return new ChallengeOperations(directory, okHttpClient, nonce, config.getJwsAlgorithm(), signer, jwk);
+  }
+
+  @Override
+  public void close() {
+    if (okHttpClient.connectionPool() != null) {
+      okHttpClient.connectionPool().evictAll();
+    }
+    if (okHttpClient.dispatcher() != null &&
+      okHttpClient.dispatcher().executorService() != null &&
+      !okHttpClient.dispatcher().executorService().isShutdown()
+      ) {
+      okHttpClient.dispatcher().executorService().shutdown();
+    }
   }
 
 }

@@ -15,18 +15,16 @@
  */
 package io.fabric8.acme.client.model;
 
-import net.minidev.json.JSONObject;
+public abstract class ChallengeWithToken extends Challenge {
 
-public class Http01Challenge extends ChallengeWithToken {
+  private final String token;
 
-  public Http01Challenge(String token, Status status, String uri) {
-    super(token, "http-01", status, uri);
+  protected ChallengeWithToken(String token, String type, Status status, String uri) {
+    super(type, status, uri);
+    this.token = token;
   }
-  @Override
-  public JSONObject toJSONObject() {
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("type", getType());
-    jsonObject.put("token", getToken());
-    return jsonObject;
+
+  public String getToken() {
+    return token;
   }
 }

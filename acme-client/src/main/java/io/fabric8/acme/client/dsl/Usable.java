@@ -13,20 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.fabric8.acme.client.model;
+package io.fabric8.acme.client.dsl;
 
-import net.minidev.json.JSONObject;
+public interface Usable<T, U> {
 
-public class Http01Challenge extends ChallengeWithToken {
+  U use(T obj);
 
-  public Http01Challenge(String token, Status status, String uri) {
-    super(token, "http-01", status, uri);
-  }
-  @Override
-  public JSONObject toJSONObject() {
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("type", getType());
-    jsonObject.put("token", getToken());
-    return jsonObject;
-  }
 }
