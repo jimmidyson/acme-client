@@ -98,7 +98,7 @@ public class RegistrationKeyTest extends BaseTest {
       .addHeader("Link", "<https://acme-staging.api.letsencrypt.org/acme/new-authz>;rel=\"next\"")
       .addHeader("Link", "<https://letsencrypt.org/documents/LE-SA-v1.0.1-July-27-2015.pdf>;rel=\"terms-of-service\"")
       .addHeader("Location", server.url("/acme/reg/1"))
-      .setResponseCode(HttpURLConnection.HTTP_ACCEPTED)
+      .setResponseCode(HttpURLConnection.HTTP_OK)
     );
 
     server.enqueue(noncedResponse(newDirectory(server)));
