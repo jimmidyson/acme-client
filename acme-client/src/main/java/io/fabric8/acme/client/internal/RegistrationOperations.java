@@ -159,7 +159,7 @@ public class RegistrationOperations extends BaseOperations<Registration> impleme
       newKey.put("resource", "reg");
       newKey.put("newKey", oldJwsObject.serialize());
 
-      sendRequest(get().getLocation(), newKey, jwsHeader().build(), (response) -> null, HttpURLConnection.HTTP_ACCEPTED);
+      sendRequest(get().getLocation(), newKey, jwsHeader().build(), (response) -> null, HttpURLConnection.HTTP_OK);
     } catch (JOSEException e) {
       throw ACMEClientException.launderThrowable(e);
     }
