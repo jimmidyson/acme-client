@@ -69,6 +69,15 @@ public abstract class BaseOperations<T> {
     this.jwk = jwk;
   }
 
+  public BaseOperations(BaseOperations<T> orig) {
+    this.directory = orig.directory;
+    this.okHttpClient = orig.okHttpClient;
+    this.nonce = orig.nonce;
+    this.jwsAlgorithm = orig.jwsAlgorithm;
+    this.signer = orig.signer;
+    this.jwk = orig.jwk;
+  }
+
   protected T sendRequest(Resource.ResourceType resourceType, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int... successCodes) {
     return sendRequest(directory.get(resourceType), item, jwsHeader, responseHandler, successCodes);
   }

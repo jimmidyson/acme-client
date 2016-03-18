@@ -22,6 +22,11 @@ public class Http01Challenge extends ChallengeWithToken {
   public Http01Challenge(String token, Status status, String uri) {
     super(token, "http-01", status, uri);
   }
+
+  public Http01Challenge(String token, Status status, String uri, String keyAuthorization) {
+    super(token, "http-01", status, uri, keyAuthorization);
+  }
+
   @Override
   public JSONObject toJSONObject() {
     JSONObject jsonObject = new JSONObject();

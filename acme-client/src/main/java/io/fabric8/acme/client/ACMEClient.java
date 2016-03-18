@@ -18,7 +18,7 @@ package io.fabric8.acme.client;
 import io.fabric8.acme.client.dsl.CreateLocatable;
 import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdateRecoverable;
 import io.fabric8.acme.client.dsl.Gettable;
-import io.fabric8.acme.client.dsl.Readyable;
+import io.fabric8.acme.client.dsl.PrepareReadyable;
 import io.fabric8.acme.client.dsl.UseLocatable;
 import io.fabric8.acme.client.model.Authorization;
 import io.fabric8.acme.client.model.Challenge;
@@ -39,7 +39,7 @@ public interface ACMEClient extends AutoCloseable{
 
   CreateLocatable<Authorization, NewAuthorization, SendableNewAuthorization, Gettable<Authorization>> authorization();
 
-  UseLocatable<Challenge, Readyable<Challenge>> challenges();
+  UseLocatable<Challenge, PrepareReadyable<Challenge>> challenges();
 
   void close();
 

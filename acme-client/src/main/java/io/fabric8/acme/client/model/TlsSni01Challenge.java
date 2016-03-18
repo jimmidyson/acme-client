@@ -23,6 +23,10 @@ public class TlsSni01Challenge extends ChallengeWithToken {
     super(token, "tls-sni-01", status, uri);
   }
 
+  public TlsSni01Challenge(String token, Status status, String uri, String keyAuthorization) {
+    super(token, "tls-sni-01", status, uri, keyAuthorization);
+  }
+
   @Override
   public JSONObject toJSONObject() {
     JSONObject jsonObject = new JSONObject();

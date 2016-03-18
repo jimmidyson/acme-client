@@ -19,12 +19,25 @@ public abstract class ChallengeWithToken extends Challenge {
 
   private final String token;
 
+  private final String keyAuthorization;
+
+  protected ChallengeWithToken(String token, String type, Status status, String uri, String keyAuthorization) {
+    super(type, status, uri);
+    this.token = token;
+    this.keyAuthorization = keyAuthorization;
+  }
+
   protected ChallengeWithToken(String token, String type, Status status, String uri) {
     super(type, status, uri);
     this.token = token;
+    this.keyAuthorization = null;
   }
 
   public String getToken() {
     return token;
+  }
+
+  public String getKeyAuthorization() {
+    return keyAuthorization;
   }
 }

@@ -48,13 +48,14 @@ public abstract class Challenge {
     Status status = Status.findByStatus((String) jsonObject.get("status"));
     String uri = (String) jsonObject.get("uri");
     String type = (String) jsonObject.get("type");
+    String keyAuthorization = (String) jsonObject.get("keyAuthorization");
     switch (type) {
       case "dns-01":
-        return new Dns01Challenge((String) jsonObject.get("token"), status, uri);
+        return new Dns01Challenge((String) jsonObject.get("token"), status, uri, keyAuthorization);
       case "http-01":
-        return new Http01Challenge((String) jsonObject.get("token"), status, uri);
+        return new Http01Challenge((String) jsonObject.get("token"), status, uri, keyAuthorization);
       case "tls-sni-01":
-        return new TlsSni01Challenge((String) jsonObject.get("token"), status, uri);
+        return new TlsSni01Challenge((String) jsonObject.get("token"), status, uri, keyAuthorization);
       default:
         throw new ACMEClientException("unknownChallengeType", "Unknown challenge type: " + type);
     }

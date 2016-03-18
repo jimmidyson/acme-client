@@ -23,6 +23,10 @@ public class Dns01Challenge extends ChallengeWithToken {
     super(token, "dns-01", status, uri);
   }
 
+  public Dns01Challenge(String token, Status status, String uri, String keyAuthorization) {
+    super(token, "dns-01", status, uri, keyAuthorization);
+  }
+
   @Override
   public JSONObject toJSONObject() {
     JSONObject jsonObject = new JSONObject();

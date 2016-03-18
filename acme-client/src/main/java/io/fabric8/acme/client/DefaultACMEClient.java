@@ -20,7 +20,7 @@ import com.nimbusds.jose.jwk.JWK;
 import io.fabric8.acme.client.dsl.CreateLocatable;
 import io.fabric8.acme.client.dsl.GetCreateUpdateEditKeyUpdateRecoverable;
 import io.fabric8.acme.client.dsl.Gettable;
-import io.fabric8.acme.client.dsl.Readyable;
+import io.fabric8.acme.client.dsl.PrepareReadyable;
 import io.fabric8.acme.client.dsl.UseLocatable;
 import io.fabric8.acme.client.internal.AuthorizationOperations;
 import io.fabric8.acme.client.internal.ChallengeOperations;
@@ -128,7 +128,7 @@ public class DefaultACMEClient implements ACMEClient {
   }
 
   @Override
-  public UseLocatable<Challenge, Readyable<Challenge>> challenges() {
+  public UseLocatable<Challenge, PrepareReadyable<Challenge>> challenges() {
     return new ChallengeOperations(directory, okHttpClient, nonce, config.getJwsAlgorithm(), signer, jwk);
   }
 
