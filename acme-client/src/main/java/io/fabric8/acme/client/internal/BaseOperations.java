@@ -69,6 +69,15 @@ public abstract class BaseOperations<T> {
     this.jwk = jwk;
   }
 
+  public BaseOperations(BaseOperations<T> orig) {
+    this.directory = orig.directory;
+    this.okHttpClient = orig.okHttpClient;
+    this.nonce = orig.nonce;
+    this.jwsAlgorithm = orig.jwsAlgorithm;
+    this.signer = orig.signer;
+    this.jwk = orig.jwk;
+  }
+
   protected T sendRequest(Resource.ResourceType resourceType, Resource item, JWSHeader jwsHeader, ResponseHandler<T> responseHandler, int... successCodes) {
     return sendRequest(directory.get(resourceType), item, jwsHeader, responseHandler, successCodes);
   }
@@ -90,7 +99,18 @@ public abstract class BaseOperations<T> {
       .url(url)
       .post(body)
       .build();
+    return sendRequest(request, responseHandler, successCodes);
+  }
 
+  protected T sendRequest(String url, ResponseHandler<T> responseHandler, int... successCodes) {
+    Request request = new Request.Builder()
+      .url(url)
+      .get()
+      .build();
+    return sendRequest(request, responseHandler, successCodes);
+  }
+
+  protected T sendRequest(Request request, ResponseHandler<T> responseHandler, int... successCodes) {
     try {
       Response response = okHttpClient.newCall(request).execute();
       try {

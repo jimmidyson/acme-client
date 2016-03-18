@@ -83,7 +83,7 @@ public class RegistrationRecoveryTest extends BaseTest {
       "  \"initialIp\": \"86.11.222.69\",\n" +
       "  \"createdAt\": \"2016-02-29T13:43:09.201427499Z\"\n" +
       "}")
-      .addHeader("Retry-After", "5")
+      .addHeader("Retry-After", "1")
       .addHeader("Location", server.url("/acme/reg/1"))
       .setResponseCode(HttpURLConnection.HTTP_ACCEPTED)
     );
@@ -97,7 +97,7 @@ public class RegistrationRecoveryTest extends BaseTest {
       "  \"initialIp\": \"86.11.222.69\",\n" +
       "  \"createdAt\": \"2016-02-29T13:43:09.201427499Z\"\n" +
       "}")
-      .addHeader("Retry-After", DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now().plus(10, ChronoUnit.SECONDS)))
+      .addHeader("Retry-After", DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now().plus(1, ChronoUnit.SECONDS)))
       .addHeader("Location", server.url("/acme/reg/1"))
       .setResponseCode(HttpURLConnection.HTTP_ACCEPTED)
     );
@@ -199,7 +199,7 @@ public class RegistrationRecoveryTest extends BaseTest {
       "  \"initialIp\": \"86.11.222.69\",\n" +
       "  \"createdAt\": \"2016-02-29T13:43:09.201427499Z\"\n" +
       "}")
-      .addHeader("Retry-After", "5")
+      .addHeader("Retry-After", "1")
       .addHeader("Location", server.url("/acme/reg/1"))
       .setResponseCode(HttpURLConnection.HTTP_ACCEPTED)
     );
@@ -213,7 +213,7 @@ public class RegistrationRecoveryTest extends BaseTest {
       "  \"initialIp\": \"86.11.222.69\",\n" +
       "  \"createdAt\": \"2016-02-29T13:43:09.201427499Z\"\n" +
       "}")
-      .addHeader("Retry-After", DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now().plus(10, ChronoUnit.SECONDS)))
+      .addHeader("Retry-After", DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now().plus(1, ChronoUnit.SECONDS)))
       .addHeader("Location", server.url("/acme/reg/1"))
       .setResponseCode(HttpURLConnection.HTTP_ACCEPTED)
     );
